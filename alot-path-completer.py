@@ -40,6 +40,7 @@ def native_complete(pattern):
     """Find all the paths matching the pattern by
        simply looking on the filesystem
     """
+    pattern = os.path.expanduser(pattern)
     return glob.iglob(pattern + '*')
 
 
@@ -98,6 +99,7 @@ try:
         """Find the files maching the pattern amongst the list
            of recently opened document maintained by gnome
         """
+        pattern = os.path.expanduser(pattern)
         manager = gtk.recent_manager_get_default()
 
         for item in manager.get_items():
