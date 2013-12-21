@@ -19,8 +19,9 @@ import sys
 
 available_completers = {}
 
+
 def register_completer(name):
-    """Decorator that registers a path completer function 
+    """Decorator that registers a path completer function
        in the global map of available completers
     """
     def real_register(func):
@@ -34,6 +35,7 @@ def register_completer(name):
 # Path completer that works like the native alot one
 #
 import glob
+
 
 @register_completer('native')
 def native_complete(pattern):
@@ -55,7 +57,7 @@ try:
     @register_completer('recoll')
     def recoll_complete(pattern):
         """Use the recoll desktop search tools index
-           to quicly locate all filenames maching the 
+           to quicly locate all filenames maching the
            pattern, whatever the location on the filesystem
         """
 
@@ -70,7 +72,7 @@ try:
         nres = query.executesd(search_data)
 
         for _ in range(nres):
-            item = query.fetchone() 
+            item = query.fetchone()
             uri = urlparse.urlparse(item.get('url'))
             if uri.scheme != 'file':
                 continue
@@ -117,7 +119,7 @@ try:
 except:
     pass
 
-    
+
 ###############################################################
 # Main code
 ###############################################################
@@ -127,17 +129,20 @@ from optparse import OptionParser
 
 
 parser = OptionParser()
-parser.add_option("-c", "--completers", dest="completers", help="list of completion mechanisms to use",
-        metavar="COMPLETION,...", default="native")
+parser.add_option("-c", "--completers", dest="completers",
+                  help="list of completion mechanisms to use",
+                  metavar="COMPLETION,...", default="native")
 
 options, args = parser.parse_args()
 search_pattern = ' '.join(args) if args else ''
 
 
 try:
-    selected_completers = [ available_completers[name] for name in options.completers.split(',') ]
+    selected_completers = [available_completers[name]
+                           for name in options.completers.split(',')]
 except KeyError as e:
-    sys.stderr.write("ERROR: Completion mechanisms %s is unknown or not available\n" % e.message)
+    sys.stderr.write("ERROR: Completion mechanisms %s "
+                     "is unknown or not available\n" % e.message)
     sys.exit(2)
 
 existing_completions = set()
@@ -148,4 +153,3 @@ for completer in selected_completers:
         if not completion in existing_completions:
             existing_completions.add(completion)
             print completion
-
